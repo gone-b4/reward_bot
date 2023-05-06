@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix="?", description="Spin for a chance to win a r
 
 @bot.event
 async def on_ready():
-    print(f"Reward bot has logged in as {bot.user}")
+    print(f"{bot.user} started running")
 
 @bot.command()
 async def spin(ctx):
@@ -47,7 +47,22 @@ async def listRewards(ctx):
 @bot.command()
 async def updateReward(ctx, reward: str, weight: str):
     """Update a rewards weight"""
-    return
+    ret = spin2win.updateReward(reward, weight)
+    if ("Error" in ret):
+        await ctx.send(f"```{ret}```")
+        return
+
+    await ctx.send(f"```Updated {reward} with {weight}```")
+
+@bot.command()
+async def addReward(ctx, reward: str, weight: str):
+    """Add reward to reward list"""
+    ret = spin2win.addReward(reward, weight)
+    if ("Error" in ret):
+        await ctx.send(f"```{ret}```")
+        return
+
+    await ctx.send(f"```Added {reward} with weight {weight}```")
 
 def init()-> argparse.Namespace:
     import argparse
@@ -56,7 +71,6 @@ def init()-> argparse.Namespace:
     args = parser.parse_args()
 
     return args
-
 
 args = init()
 spin2win = SpinToWin()

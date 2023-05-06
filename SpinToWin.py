@@ -3,11 +3,14 @@ import random
 
 class SpinToWin:
     def __init__(self)-> None:
-        self.rewards = list()
-        self.weights = tuple()
+        self.rewards = dict()
         self.num_items = int()
 
     def loadWheel(self, item_file: str)-> None:
+        """
+        Load wheel with CSV file
+        @param item_file: CSV file containing rewards and weights
+        """
         total_weight = int()
         weights = list()
 
@@ -18,25 +21,50 @@ class SpinToWin:
 
                 try:
                     weight = float(weight)
-                    total_weight += weight
                 except ValueError:
                     raise ValueError("Weight must be number")
 
-                self.rewards.append(reward)
-                weights.append(weight)
+                self.rewards[reward] = weight
 
-        if (total_weight != 100):
-            raise ValueError("Total weight must equal 100")
-
-        self.weights = tuple(weights)
         self.num_items = len(self.rewards)
 
     def spin(self)-> list:
-        return "".join(random.choices(self.rewards, self.weights, k=1))
+        return "".join(random.choices(list(self.rewards.keys()), list(self.rewards.values()), k=1))
+
+    def addReward(self, reward: str, weight: str)-> str:
+        """
+        Add reward to wheel
+        @param reward: Name of reward to add
+        @param weight: Weight of new reward
+        """
+        if (reward in self.rewards):
+            return f"Error: {reward} already exists"
+
+        try:
+            weight = float(weight)
+            self.rewards[reward] = weight
+        except ValueError:
+            return f"Error: {weight} is not a valid weigt"
+
+        return "Success"
 
     def getRewards(self)-> dict:
-        rewards = dict()
-        for i in range(self.num_items):
-            rewards[self.rewards[i]] = self.weights[i]
+        """List rewards"""
+        return self.rewards
 
-        return rewards
+    def updateReward(self, reward: str, new_weight: str)-> str:
+        """
+        Update current reward
+        @param reward: Name of reward to update
+        @param new_weight: New weight for specified reward
+        """
+        if (reward not in self.rewards):
+            return f"Error: {reward} not in rewards"
+
+        try:
+            new_weight = float(new_weight)
+            self.rewards[reward] = new_weight
+        except ValueError:
+            return f"Error: {new_weight} is not a valid weight"
+
+        return "Success"
