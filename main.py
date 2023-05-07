@@ -64,6 +64,16 @@ async def addReward(ctx, reward: str, weight: str):
 
     await ctx.send(f"```Added {reward} with weight {weight}```")
 
+@bot.command()
+async def deleteReward(ctx, reward: str):
+    """Delete reward from rewards"""
+    ret = spin2win.deleteReward(reward)
+    if ("Error" in ret):
+        await ctx.send(f"```{ret}```")
+        return
+
+    await ctx.send(f"```{reward} deleted```")
+
 def init()-> argparse.Namespace:
     import argparse
     parser = argparse.ArgumentParser(prog="main.py", description="")

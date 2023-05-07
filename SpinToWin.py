@@ -28,7 +28,7 @@ class SpinToWin:
 
         self.num_items = len(self.rewards)
 
-    def spin(self)-> list:
+    def spin(self)-> str:
         return "".join(random.choices(list(self.rewards.keys()), list(self.rewards.values()), k=1))
 
     def addReward(self, reward: str, weight: str)-> str:
@@ -68,3 +68,16 @@ class SpinToWin:
             return f"Error: {new_weight} is not a valid weight"
 
         return "Success"
+
+    def deleteReward(self, reward: str)-> str:
+        """
+        Delete reward from rewards
+        @param reward: Name of the reward to delete
+        """
+
+        if (reward not in self.rewards):
+            return f"Error: {reward} not in rewards"
+
+        self.rewards.pop(reward)
+
+        return f"Removed {reward}"
